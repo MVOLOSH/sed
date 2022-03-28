@@ -12,69 +12,70 @@ destination (str) : the text file to write
 
 """
 """
-no command or flag - first occurrence in a line [1] V
-int  - nth occurrence [2] V
-g  - all occurrences in a line  [3]   V
-int and g - from nth to all in a line [4] V   
-p - duplicate the replaced occurrence [5] V
--n and p - print only the replaced lines [6] V
+[1]: no command or flag - first occurrence in a line
+[2]: int  - nth occurrence in a line
+[3]: g  - all occurrences in a line
+[4]: int and g - from nth to all in a line
+[5]: p - duplicate the replaced occurrence
+[6]: -n and p - print only the replaced lines
 """
 
 
 def sed(option, command, replace_str, to_pattern, flag, source, destination):
-    if re.match("[a-zA-z0-9]*.txt$", source):
+    if re.match("[a-zA-z0-9]*.txt$", source):  # get input txt file
         if re.match("^s$", command):
             if re.match("^g$", flag) and re.match("^$", option):
-
+                # replace all occurrences of a string
                 replace_all_occur_line_from_file(replace_str, to_pattern, source, destination)
 
             elif re.match("^$", flag) and re.match("^$", option):
-
+                # replace first occurence of a string on each line
                 replace_first_occur_line_from_file(replace_str, to_pattern, source, destination)
 
             elif re.match("^[0-9]*$", flag) and re.match("^$", option):
-
+                # replace the nth string occurrence on each line
                 replace_nth_occur_line_from_file(replace_str, to_pattern, flag, source, destination)
 
             elif re.match("^[0-9g]*$", flag) and re.match("^$", option):
-
+                # replace from the nth to the last occurrence on each line
                 replace_nth_to_all_occur_line_from_file(replace_str, to_pattern, flag, source, destination)
 
             elif re.match("^p$", flag):
                 if re.match("^-n$", option):
-
+                    # print only the lines that had a string replaced
                     print_only_replaced_lines_from_file(replace_str, to_pattern, source, destination)
                 else:
+                    # print the lines that had a string replaced twice and other lines ones
                     print_replaced_lines_twice_from_file(replace_str, to_pattern, source, destination)
 
             else:
                 return
 
-    else:
+    else:  # get an input string
         if re.match("^s$", command):
             if re.match("^g$", flag) and re.match("^$", option):
-
+                # replace all occurrences of a string
                 replace_all_occur_line_from_string_input(replace_str, to_pattern, destination)
 
             elif re.match("^$", flag) and re.match("^$", option):
-
+                # replace first occurence of a string on each line
                 replace_first_occur_line_from_string_input(replace_str, to_pattern, destination)
 
             elif re.match("^[0-9]*$", flag) and re.match("^$", option):
-
+                # replace the nth string occurrence on each line
                 replace_nth_occur_line_from_string_input(replace_str, to_pattern, flag, destination)
 
             elif re.match("^[0-9g]*$", flag) and re.match("^$", option):
-
+                # replace from the nth to the last occurrence on each line
                 replace_nth_to_all_occur_line_from_string_input(replace_str, to_pattern, flag, destination)
 
             elif re.match("^p$", flag):
                 if re.match("^-n$", option):
-
+                    # print only the lines that had a string replaced
                     print_only_replaced_lines_from_string_input(replace_str, to_pattern, destination)
 
                 else:
-
+                    # print the lines that had a string replaced twice and other lines ones
                     print_replaced_lines_twice_from_string_input(replace_str, to_pattern, destination)
             else:
                 return
@@ -128,19 +129,26 @@ def replace_first_occur_line_from_file(replace_str, to_pattern, source, destinat
 
 def replace_nth_occur_line_from_file(replace_str, to_pattern, flag, source, destination):
     try:
+        result = []
+        str_result = ""
         file_read = open(source, "r")
         data = file_read.read()
+        before = data.split("\n")
         if replace_str not in data:
             print(data)
             return
         else:
-            new_string = replace_nth(data, replace_str, to_pattern, int(flag[0]), "nth")
+            for i in before:
+                new_string = replace_nth(i, replace_str, to_pattern, int(flag[0]), "nth")
+                result.append(new_string)
+            for x in result:
+                str_result += x + "\n"
             file_read.close()
 
         file_write = open(destination, "w")
-        file_write.write(new_string)
+        file_write.write(str_result)
         file_write.close()
-        print(new_string)
+        print(str_result)
     except IOError:
         print("Error: File does not appear to exist.")
         return
@@ -148,18 +156,26 @@ def replace_nth_occur_line_from_file(replace_str, to_pattern, flag, source, dest
 
 def replace_nth_to_all_occur_line_from_file(replace_str, to_pattern, flag, source, destination):
     try:
+        result = []
+        str_result = ""
         file_read = open(source, "r")
         data = file_read.read()
+        before = data.split("\n")
         if replace_str not in data:
             print(data)
             return
         else:
-            new_string = replace_nth(data, replace_str, to_pattern, int(flag[0]), "nth_right")
+            for i in before:
+                new_string = replace_nth(i, replace_str, to_pattern, int(flag[0]), "nth_right")
+                result.append(new_string)
+            for x in result:
+                str_result += x + "\n"
             file_read.close()
+
         file_write = open(destination, "w")
-        file_write.write(new_string)
+        file_write.write(str_result)
         file_write.close()
-        print(new_string)
+        print(str_result)
     except IOError:
         print("Error: File does not appear to exist.")
         return
@@ -394,4 +410,3 @@ sed("", "s", "cat", "zebra", "4g", "", "output.txt")
 sed("", "s", "cat", "zebra", "p", "", "output.txt")
 sed("-n", "s", "cat", "zebra", "p", "", "output.txt")
 """
-sed("-n", "s", "cat", "zebra", "p", "", "output.txt")
