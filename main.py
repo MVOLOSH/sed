@@ -1,6 +1,9 @@
 import re
 
 """
+Basic SED Command implementation
+"""
+"""
 Reads a text file and replaces a pattern inside
 option (str) : -n - suppresses the duplicate rows
 command (str) : s - to replace the text in a file
@@ -398,7 +401,7 @@ with text file:
 sed("", "s", "cat", "zebra", "", "input.txt", "output.txt")
 sed("", "s", "cat", "zebra", "g", "input.txt", "output.txt")
 sed("", "s", "cat", "zebra", "2", "input.txt", "output.txt")
-sed("", "s", "cat", "zebra", "3g", "input.txt", "output.txt")
+sed("", "s", "cat", "zebra", "2g", "input.txt", "output.txt")
 sed("", "s", "cat", "zebra", "p", "input.txt", "output.txt")
 sed("-n", "s", "cat", "zebra", "p", "input.txt", "output.txt")
 
@@ -406,7 +409,7 @@ with string:
 sed("", "s", "cat", "zebra", "", "", "output.txt")
 sed("", "s", "cat", "zebra", "g", "", "output.txt")
 sed("", "s", "cat", "zebra", "1", "", "output.txt")
-sed("", "s", "cat", "zebra", "4g", "", "output.txt")
+sed("", "s", "cat", "zebra", "1g", "", "output.txt")
 sed("", "s", "cat", "zebra", "p", "", "output.txt")
 sed("-n", "s", "cat", "zebra", "p", "", "output.txt")
 """
