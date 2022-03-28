@@ -142,8 +142,12 @@ def replace_nth_occur_line_from_file(replace_str, to_pattern, flag, source, dest
             return
         else:
             for i in before:
-                new_string = replace_nth(i, replace_str, to_pattern, int(flag[0]), "nth")
-                result.append(new_string)
+                if len(re.findall(replace_str, i)) >= int(flag[0]):
+                    new_string = replace_nth(i, replace_str, to_pattern, int(flag[0]), "nth")
+                    result.append(new_string)
+                else:
+                    print(data)
+                    return
             for x in result:
                 str_result += x + "\n"
             file_read.close()
@@ -169,8 +173,12 @@ def replace_nth_to_all_occur_line_from_file(replace_str, to_pattern, flag, sourc
             return
         else:
             for i in before:
-                new_string = replace_nth(i, replace_str, to_pattern, int(flag[0]), "nth_right")
-                result.append(new_string)
+                if len(re.findall(replace_str, i)) >= int(flag[0]):
+                    new_string = replace_nth(i, replace_str, to_pattern, int(flag[0]), "nth_right")
+                    result.append(new_string)
+                else:
+                    print(data)
+                    return
             for x in result:
                 str_result += x + "\n"
             file_read.close()
@@ -306,8 +314,7 @@ def replace_nth_occur_line_from_string_input(replace_str, to_pattern, flag, dest
         return
 
 
-def replace_nth_to_all_occur_line_from_string_input(replace_str, to_pattern, flag,
-                                                    destination):
+def replace_nth_to_all_occur_line_from_string_input(replace_str, to_pattern, flag, destination):
     try:
         to_replace = input("Write the string to change: ")
         if replace_str not in to_replace:
@@ -398,18 +405,18 @@ def replace_nth(string, old_str, new_str, n=1, option="nth"):
 # sample inputs
 """
 with text file:
-sed("", "s", "cat", "zebra", "", "input.txt", "output.txt")
-sed("", "s", "cat", "zebra", "g", "input.txt", "output.txt")
-sed("", "s", "cat", "zebra", "2", "input.txt", "output.txt")
-sed("", "s", "cat", "zebra", "2g", "input.txt", "output.txt")
-sed("", "s", "cat", "zebra", "p", "input.txt", "output.txt")
-sed("-n", "s", "cat", "zebra", "p", "input.txt", "output.txt")
+sed("", "s", "cat", "ZEBRA", "", "input.txt", "output.txt")
+sed("", "s", "cat", "ZEBRA", "g", "input.txt", "output.txt")
+sed("", "s", "cat", "ZEBRA", "2", "input.txt", "output.txt")
+sed("", "s", "cat", "ZEBRA", "2g", "input.txt", "output.txt")
+sed("", "s", "cat", "ZEBRA", "p", "input.txt", "output.txt")
+sed("-n", "s", "cat", "ZEBRA", "p", "input.txt", "output.txt")
 
 with string:
-sed("", "s", "cat", "zebra", "", "", "output.txt")
-sed("", "s", "cat", "zebra", "g", "", "output.txt")
-sed("", "s", "cat", "zebra", "1", "", "output.txt")
-sed("", "s", "cat", "zebra", "1g", "", "output.txt")
-sed("", "s", "cat", "zebra", "p", "", "output.txt")
-sed("-n", "s", "cat", "zebra", "p", "", "output.txt")
+sed("", "s", "cat", "ZEBRA", "", "", "output.txt")
+sed("", "s", "cat", "ZEBRA", "g", "", "output.txt")
+sed("", "s", "cat", "ZEBRA", "1", "", "output.txt")
+sed("", "s", "cat", "ZEBRA", "1g", "", "output.txt")
+sed("", "s", "cat", "ZEBRA", "p", "", "output.txt")
+sed("-n", "s", "cat", "ZEBRA", "p", "", "output.txt")
 """
