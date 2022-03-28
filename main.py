@@ -8,7 +8,7 @@ replace_str (str): the string to replace
 to_pattern (str): the pattern to replace to
 flag (str/int): g - global or not global / p - print duplicates
 source (str): the text file to read / string to read
-dest (str) : the text file to write
+destination (str) : the text file to write
 
 """
 """
@@ -21,31 +21,31 @@ p - duplicate the replaced occurrence [5] V
 """
 
 
-def sed(option, command, replace_str, to_pattern, flag, source, dest):
+def sed(option, command, replace_str, to_pattern, flag, source, destination):
     if re.match("[a-zA-z0-9]*.txt$", source):
         if re.match("^s$", command):
             if re.match("^g$", flag) and re.match("^$", option):
 
-                replace_all_occur_line_from_file(option, command, replace_str, to_pattern, flag, source, dest)
+                replace_all_occur_line_from_file(replace_str, to_pattern, source, destination)
 
             elif re.match("^$", flag) and re.match("^$", option):
 
-                replace_first_occur_line_from_file(option, command, replace_str, to_pattern, flag, source, dest)
+                replace_first_occur_line_from_file(replace_str, to_pattern, source, destination)
 
             elif re.match("^[0-9]*$", flag) and re.match("^$", option):
 
-                replace_nth_occur_line_from_file(option, command, replace_str, to_pattern, flag, source, dest)
+                replace_nth_occur_line_from_file(replace_str, to_pattern, flag, source, destination)
 
             elif re.match("^[0-9g]*$", flag) and re.match("^$", option):
 
-                replace_nth_to_all_occur_line_from_file(option, command, replace_str, to_pattern, flag, source, dest)
+                replace_nth_to_all_occur_line_from_file(replace_str, to_pattern, flag, source, destination)
 
             elif re.match("^p$", flag):
                 if re.match("^-n$", option):
 
-                    print_only_replaced_lines_from_file(option, command, replace_str, to_pattern, flag, source, dest)
+                    print_only_replaced_lines_from_file(replace_str, to_pattern, source, destination)
                 else:
-                    print_replaced_lines_twice_from_file(option, command, replace_str, to_pattern, flag, source, dest)
+                    print_replaced_lines_twice_from_file(replace_str, to_pattern, source, destination)
 
             else:
                 return
@@ -54,48 +54,44 @@ def sed(option, command, replace_str, to_pattern, flag, source, dest):
         if re.match("^s$", command):
             if re.match("^g$", flag) and re.match("^$", option):
 
-                replace_all_occur_line_from_string_input(option, command, replace_str, to_pattern, flag, source, dest)
+                replace_all_occur_line_from_string_input(replace_str, to_pattern, destination)
 
             elif re.match("^$", flag) and re.match("^$", option):
 
-                replace_first_occur_line_from_string_input(option, command, replace_str, to_pattern, flag, source, dest)
+                replace_first_occur_line_from_string_input(replace_str, to_pattern, destination)
 
             elif re.match("^[0-9]*$", flag) and re.match("^$", option):
 
-                replace_nth_occur_line_from_string_input(option, command, replace_str, to_pattern, flag, source, dest)
+                replace_nth_occur_line_from_string_input(replace_str, to_pattern, flag, destination)
 
             elif re.match("^[0-9g]*$", flag) and re.match("^$", option):
 
-                replace_nth_to_all_occur_line_from_string_input(option, command, replace_str, to_pattern, flag, source,
-                                                                dest)
+                replace_nth_to_all_occur_line_from_string_input(replace_str, to_pattern, flag, destination)
 
             elif re.match("^p$", flag):
                 if re.match("^-n$", option):
 
-                    print_only_replaced_lines_from_string_input(option, command, replace_str, to_pattern, flag, source,
-                                                                dest)
+                    print_only_replaced_lines_from_string_input(replace_str, to_pattern, destination)
 
                 else:
 
-                    print_replaced_lines_twice_from_string_input(option, command, replace_str, to_pattern, flag, source,
-                                                                 dest)
+                    print_replaced_lines_twice_from_string_input(replace_str, to_pattern, destination)
             else:
                 return
 
 
-def replace_all_occur_line_from_file(option, command, replace_str, to_pattern, flag, source, dest):
+def replace_all_occur_line_from_file(replace_str, to_pattern, source, destination):
     try:
         file_read = open(source, "r")
         data = file_read.read()
         if replace_str not in data:
-            # raise IOError("String not found in the text")
             print(data)
             return
         else:
             data = re.sub(replace_str, to_pattern, data)
             file_read.close()
 
-        file_write = open(dest, "w")
+        file_write = open(destination, "w")
         file_write.write(data)
         file_write.close()
         print(data)
@@ -104,7 +100,7 @@ def replace_all_occur_line_from_file(option, command, replace_str, to_pattern, f
         return
 
 
-def replace_first_occur_line_from_file(option, command, replace_str, to_pattern, flag, source, dest):
+def replace_first_occur_line_from_file(replace_str, to_pattern, source, destination):
     try:
         str_result = ""
         result = []
@@ -112,7 +108,6 @@ def replace_first_occur_line_from_file(option, command, replace_str, to_pattern,
         data = file_read.read()
         before = data.split("\n")
         if replace_str not in data:
-            # raise IOError("String not found in the text")
             print(data)
             return
         else:
@@ -122,7 +117,7 @@ def replace_first_occur_line_from_file(option, command, replace_str, to_pattern,
                 str_result += x + "\n"
             file_read.close()
 
-        file_write = open(dest, "w")
+        file_write = open(destination, "w")
         file_write.write(str_result)
         file_write.close()
         print(str_result)
@@ -131,19 +126,18 @@ def replace_first_occur_line_from_file(option, command, replace_str, to_pattern,
         return
 
 
-def replace_nth_occur_line_from_file(option, command, replace_str, to_pattern, flag, source, dest):
+def replace_nth_occur_line_from_file(replace_str, to_pattern, flag, source, destination):
     try:
         file_read = open(source, "r")
         data = file_read.read()
         if replace_str not in data:
-            # raise IOError("String not found in the text")
             print(data)
             return
         else:
             new_string = replace_nth(data, replace_str, to_pattern, int(flag[0]), "nth")
             file_read.close()
 
-        file_write = open(dest, "w")
+        file_write = open(destination, "w")
         file_write.write(new_string)
         file_write.close()
         print(new_string)
@@ -152,18 +146,17 @@ def replace_nth_occur_line_from_file(option, command, replace_str, to_pattern, f
         return
 
 
-def replace_nth_to_all_occur_line_from_file(option, command, replace_str, to_pattern, flag, source, dest):
+def replace_nth_to_all_occur_line_from_file(replace_str, to_pattern, flag, source, destination):
     try:
         file_read = open(source, "r")
         data = file_read.read()
         if replace_str not in data:
-            # raise IOError("String not found in the text")
             print(data)
             return
         else:
             new_string = replace_nth(data, replace_str, to_pattern, int(flag[0]), "nth_right")
             file_read.close()
-        file_write = open(dest, "w")
+        file_write = open(destination, "w")
         file_write.write(new_string)
         file_write.close()
         print(new_string)
@@ -172,29 +165,28 @@ def replace_nth_to_all_occur_line_from_file(option, command, replace_str, to_pat
         return
 
 
-def print_only_replaced_lines_from_file(option, command, replace_str, to_pattern, flag, source, dest):
+def print_only_replaced_lines_from_file(replace_str, to_pattern, source, destination):
     try:
         str_result = ""
         result = []
+        temp = []
         file_read = open(source, "r")
         data = file_read.read()
         if replace_str not in data:
-            # raise IOError("String not found in the text")
             print(data)
             return
         else:
             before = data.split("\n")
-            data = re.sub(replace_str, to_pattern, data)
-            after = data.split("\n")
-
-            for i, j in zip(after, before):
+            for k in before:
+                temp.append(re.sub(replace_str, to_pattern, k, 1))
+            for i, j in zip(temp, before):
                 if i != j:
                     result.append(i)
             for x in result:
                 str_result += x + "\n"
             file_read.close()
 
-        file_write = open(dest, "w")
+        file_write = open(destination, "w")
         file_write.write(str_result)
         file_write.close()
         print(str_result)
@@ -203,22 +195,22 @@ def print_only_replaced_lines_from_file(option, command, replace_str, to_pattern
         return
 
 
-def print_replaced_lines_twice_from_file(option, command, replace_str, to_pattern, flag, source, dest):
+def print_replaced_lines_twice_from_file(replace_str, to_pattern, source, destination):
     try:
         str_result = ""
         result = []
+        temp = []
         file_read = open(source, "r")
         data = file_read.read()
         if replace_str not in data:
-            # raise IOError("String not found in the text")
             print(data)
             return
         else:
             before = data.split("\n")
-            data = re.sub(replace_str, to_pattern, data)
-            after = data.split("\n")
+            for k in before:
+                temp.append(re.sub(replace_str, to_pattern, k, 1))
 
-            for i, j in zip(after, before):
+            for i, j in zip(temp, before):
                 if i != j:
                     for k in range(2):
                         result.append(i)
@@ -228,7 +220,7 @@ def print_replaced_lines_twice_from_file(option, command, replace_str, to_patter
                 str_result += x + "\n"
             file_read.close()
 
-        file_write = open(dest, "w")
+        file_write = open(destination, "w")
         file_write.write(str_result)
         file_write.close()
         print(str_result)
@@ -237,17 +229,16 @@ def print_replaced_lines_twice_from_file(option, command, replace_str, to_patter
         return
 
 
-def replace_all_occur_line_from_string_input(option, command, replace_str, to_pattern, flag, source, dest):
+def replace_all_occur_line_from_string_input(replace_str, to_pattern, destination):
     try:
         to_replace = input("Write the string to change: ")
         if replace_str not in to_replace:
-            # raise IOError("String not found in the text")
             print(to_replace)
             return
         else:
             new_string = re.sub(replace_str, to_pattern, to_replace)
 
-            file_write = open(dest, "w")
+            file_write = open(destination, "w")
             file_write.write(new_string)
             file_write.close()
             print(new_string)
@@ -256,14 +247,13 @@ def replace_all_occur_line_from_string_input(option, command, replace_str, to_pa
         return
 
 
-def replace_first_occur_line_from_string_input(option, command, replace_str, to_pattern, flag, source, dest):
+def replace_first_occur_line_from_string_input(replace_str, to_pattern, destination):
     try:
         str_result = ""
         result = []
         to_replace = input("Write the string to change: ")
         before = to_replace
         if replace_str not in before:
-            # raise IOError("String not found in the text")
             print(before)
             return
         else:
@@ -271,7 +261,7 @@ def replace_first_occur_line_from_string_input(option, command, replace_str, to_
             for x in result:
                 str_result += x
 
-        file_write = open(dest, "w")
+        file_write = open(destination, "w")
         file_write.write(str_result)
         file_write.close()
         print(str_result)
@@ -280,16 +270,15 @@ def replace_first_occur_line_from_string_input(option, command, replace_str, to_
         return
 
 
-def replace_nth_occur_line_from_string_input(option, command, replace_str, to_pattern, flag, source, dest):
+def replace_nth_occur_line_from_string_input(replace_str, to_pattern, flag, destination):
     try:
         to_replace = input("Write the string to change: ")
         if replace_str not in to_replace:
-            # raise IOError("String not found in the text")
             print(to_replace)
             return
         else:
             new_string = replace_nth(to_replace, replace_str, to_pattern, int(flag[0]), "nth")
-            file_write = open(dest, "w")
+            file_write = open(destination, "w")
             file_write.write(new_string)
             file_write.close()
             print(new_string)
@@ -298,16 +287,16 @@ def replace_nth_occur_line_from_string_input(option, command, replace_str, to_pa
         return
 
 
-def replace_nth_to_all_occur_line_from_string_input(option, command, replace_str, to_pattern, flag, source, dest):
+def replace_nth_to_all_occur_line_from_string_input(replace_str, to_pattern, flag,
+                                                    destination):
     try:
         to_replace = input("Write the string to change: ")
         if replace_str not in to_replace:
-            # raise IOError("String not found in the text")
             print(to_replace)
             return
         else:
             new_string = replace_nth(to_replace, replace_str, to_pattern, int(flag[0]), "nth_right")
-            file_write = open(dest, "w")
+            file_write = open(destination, "w")
             file_write.write(new_string)
             file_write.close()
             print(new_string)
@@ -316,18 +305,17 @@ def replace_nth_to_all_occur_line_from_string_input(option, command, replace_str
         return
 
 
-def print_only_replaced_lines_from_string_input(option, command, replace_str, to_pattern, flag, source, dest):
+def print_only_replaced_lines_from_string_input(replace_str, to_pattern, destination):
     try:
         str_result = ""
         result = []
         to_replace = input("Write the string to change: ")
         if replace_str not in to_replace:
-            # raise IOError("String not found in the text")
             print(to_replace)
             return
         else:
             before = to_replace
-            new_string = re.sub(replace_str, to_pattern, to_replace)
+            new_string = re.sub(replace_str, to_pattern, to_replace, 1)
             after = new_string
             if before != after:
                 result.append(after)
@@ -336,7 +324,7 @@ def print_only_replaced_lines_from_string_input(option, command, replace_str, to
             for x in result:
                 str_result += x + "\n"
 
-        file_write = open(dest, "w")
+        file_write = open(destination, "w")
         file_write.write(str_result)
         file_write.close()
         print(str_result)
@@ -345,18 +333,17 @@ def print_only_replaced_lines_from_string_input(option, command, replace_str, to
         return
 
 
-def print_replaced_lines_twice_from_string_input(option, command, replace_str, to_pattern, flag, source, dest):
+def print_replaced_lines_twice_from_string_input(replace_str, to_pattern, destination):
     try:
         str_result = ""
         result = []
         to_replace = input("Write the string to change: ")
         if replace_str not in to_replace:
-            # raise IOError("String not found in the text")
             print(to_replace)
             return
         else:
             before = to_replace
-            new_string = re.sub(replace_str, to_pattern, to_replace)
+            new_string = re.sub(replace_str, to_pattern, to_replace, 1)
             after = new_string
             if before != after:
                 result.append(after)
@@ -366,7 +353,7 @@ def print_replaced_lines_twice_from_string_input(option, command, replace_str, t
             for x in result:
                 str_result += x + "\n"
 
-        file_write = open(dest, "w")
+        file_write = open(destination, "w")
         file_write.write(str_result)
         file_write.close()
         print(str_result)
@@ -407,4 +394,4 @@ sed("", "s", "cat", "zebra", "4g", "", "output.txt")
 sed("", "s", "cat", "zebra", "p", "", "output.txt")
 sed("-n", "s", "cat", "zebra", "p", "", "output.txt")
 """
-sed("", "s", "cat", "ZEBRA", "2", "input.txt", "output.txt")
+sed("-n", "s", "cat", "zebra", "p", "", "output.txt")

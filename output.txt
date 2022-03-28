@@ -1,3 +1,1 @@
-hello cat hello ZEBRA
-hi dog cat cat
-cat hello hi dog cat
+hello zebra cat hello
