@@ -62,7 +62,7 @@ def sed(option, command, replace_str, to_pattern, flag, source, dest):
                 file_write = open(dest, "w")
                 file_write.write(str_result)
                 file_write.close()
-                print(data)
+                print(str_result)
 
             elif re.match("^[0-9]*$", flag) and re.match("^$", option):
 
